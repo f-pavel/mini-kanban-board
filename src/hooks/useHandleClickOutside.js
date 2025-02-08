@@ -1,16 +1,16 @@
 import { useEffect, useRef } from 'react';
 
-export const useHandleClickOutside = (open, callback) => {
+export const useHandleClickOutside = (isOpen, callback) => {
   const parentRef = useRef();
   const popupRef = useRef();
 
   useEffect(() => {
     function hidePopup(event) {
-      const clickedPopupBody = popupRef?.current?.contains(event.target.closest('.popup__body'));
-      const clickedToggleBody = parentRef?.current?.contains(event.target);
+      const clickedPopupBody = popupRef.current?.contains(event.target.closest('.popup__body'));
+      const clickedToggleBody = parentRef.current?.contains(event.target);
 
-      if (open && !clickedPopupBody && !clickedToggleBody) {
-        callback();
+      if (isOpen && !clickedPopupBody && !clickedToggleBody) {
+        callback?.();
       }
     }
 
@@ -19,7 +19,7 @@ export const useHandleClickOutside = (open, callback) => {
     return () => {
       window.removeEventListener('click', hidePopup);
     };
-  }, [ open, parentRef, popupRef ]);
+  }, [ isOpen, callback ]);
 
   return { parentRef, popupRef };
 };

@@ -1,14 +1,17 @@
 import cn from 'classnames';
 
-import { ColumnItem as CardColumnItem } from '@components/column-item';
+import { Card } from '../card';
+import { ColumnItem } from '../column-item';
+
+import './board-column.scss';
 
 export const BoardColumn = ({
   darkMode,
-  status,
-  sectionTitle,
   columnItems,
-  itemType = CardColumnItem,
-  onItemClick = () => {},
+  Column = ColumnItem,
+  onItemClick,
+  sectionTitle,
+  status,
   ...props
 }) => {
   const _className = cn('cards__section', {
@@ -21,11 +24,9 @@ export const BoardColumn = ({
 
   const columnTitle = `${ sectionTitle } (${ columnItems.length })`;
 
-  const ColumnItem = itemType;
-
   function handleItemClick(task) {
     return () => {
-      onItemClick(task);
+      onItemClick?.(task);
     };
   }
 
@@ -38,16 +39,34 @@ export const BoardColumn = ({
         </span>
       </p>
       <div className="cards__section-content">
-        { columnItems.map((task) => (
-          <ColumnItem
-            { ...props }
-            key={ task.id }
-            id={ task.id }
-            task={ task }
-            darkMode={ darkMode }
-            onClick={ handleItemClick(task) }
-          />
-        )) }
+        { columnItems.map((task) => {
+          const {
+            id,
+            priority,
+            subtasks,
+            title
+          } = task;
+          const subtasksCount = subtasks.length;
+          const tasksCompleted = subtasks.filter(({ completed }) => completed).length;
+
+          return (
+            <Column
+              { ...props }
+              key={ id }
+              id={ id }
+              onClick={ handleItemClick(task) }
+            >
+              <Card
+                darkMode={ darkMode }
+                description={ subtasksCount
+                  ? `${ tasksCompleted } of ${ subtasksCount } subtasks completed`
+                  : 'No subtasks added' }
+                priority={ priority }
+                title={ title }
+              />
+            </Column>
+          );
+        }) }
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import { onAuthStateChanged } from 'firebase/auth';
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { login, logout } from '@/features/userSlice';
 import { auth } from '@/firebase/config';
@@ -33,7 +33,7 @@ export const useAuthStateChange = () => {
     });
 
     return unsub;
-  }, [dispatch]);
+  }, [ dispatch ]);
 
   return { authIsReady };
 };
